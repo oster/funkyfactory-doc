@@ -1,0 +1,173 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+	<meta http-equiv="Content-Style-Type" content="text/css" />
+	<meta http-equiv="Content-Script-Type" content="text/javascript" />
+	
+	<meta http-equiv="imagetoolbar" content="no" />
+	
+	<meta name="author" content="Christophe Bouthier" />
+	<meta name="copyright" content="copyright 2009 - INRIA" />
+	<meta name="keywords" content="Qualipso, qualipso factory, open-source, quality, service, development" />
+	<meta name="description" content="Documentation for the Qualiso factory - installation and overview of the service development template" />
+	
+	<link rel="stylesheet" href="/commons/css/style.css" type="text/css" />
+	
+	<title>Qualipso Factory - Install eclipse template for service development</title>
+</head>
+<body id="www.qualipso.org">
+	
+	<h1 id="title">Qualipso Factory</h1>
+	
+	<div id="content">
+		<h2>Installation of Eclipse template for service development</h2>
+		
+		<div id="introduction">
+			<p>This page contains the necessary instructions to install an Eclipse template for developing a factory abstractService. It also contains an overview of everything given in this template. It assume that you have already installed a correct development environment, as described in the <a href="install-env-service.html">appropriate documentation</a>. If this is not the case, then you need first to follow the given instruction before proceeding to this page.</p>
+		</div>
+		
+		<div class="step">
+			<h3>Installing the template</h3>
+			<p>To install the template, you need to get the template from git inside the eclipse workspace folder, and to import the project in eclipse</p>
+      <p>
+			  <ol>
+			    <li>
+  			    Go to the folder that you specified as the Eclipse workspace, the first time you run Ecplise. In this folder, create a new folder, called "funkyfactory":
+	  	      <samp>
+	  	        <kbd>cd &lt; insert the path to your workspace folder here &gt;</kbd>
+	    	      <kbd>mkdir funkyfactory</kbd>
+      	    </samp>
+      	  </li>
+      	  <li>
+            Go in this newly created folder, and get the template from git with the following command:
+      	    <samp>
+      	     	<kbd>cd funkyfactory</kbd>
+	    	      <kbd>git clone git://github.com/funkyChris/funkyfactory-service-clock.git</kbd>
+      	    </samp>
+      	    This will create a new "funkyfactory-service-clock" folder inside the "funkufactory" folder.
+      	  </li>
+      	  <li>
+      	    Launch Eclipse, and in the "File" menu, select the "Import..." menu item:
+      	    <img src="Images/import-service-import.png" />
+      	  </li>
+      	  <li>
+      	    Open the "Maven" section, and choose "Existing Maven Projects":
+      	    <img src="Images/import-service-maven.png" />
+      	  </li>
+      	  <li>
+      	    Click on the "Browse" button to navigate to the "funkyfactory" folder you created earlier, (but don't click "OK" yet!):
+      	    <img src="Images/import-service-browse.png" />
+      	  </li>
+      	  <li>
+      	    In the "funkyfactory" folder, go in the "funkyfactory-service-clock" folder (created for you by git). In it, select the "funkyfactory-service-clock" folder, and click the "OK" button:
+      	    <img src="Images/import-service-select-1.png" />
+      	  </li>
+      	  <li>
+      	    Eclipse should find the pom file of the project. You can then click on the "Finish" button:
+      	    <img src="Images/import-service-pom-1.png" /> 
+      	  </li>
+      	  <li>
+      	    Eclipse will import the maven project, and try to resolve all maven dependencies as defined in the pom.xml file. It will download all necessary jar files in your ".m2" folder, at the root of your home directory. However, it won't succeed to download all dependencies, as some are to other funkyfactory maven project that we still have to import.
+      	    So repeat the last 5 steps ("File" -> "Import" ; "Maven" -> "Existing Maven Projects" ; "Browse") for the 3 remaining maven projects, inside the "funkyfactory/funkyfactory-service-clock" folder:
+      	     <ul>
+      	        <li>funkyfactory-service-clock-ejb</li>
+       	        <li>funkyfactory-service-clock-ftests</li>
+       	        <li>funkyfactory-service-clock-wstests</li>
+      	     </ul>
+      	    Resolving maven dependencies can take a long time to Eclipse, especially for the "funkyfactory-service-clock-ejb" project. Fortunately, the pom.xml file is configured to download all dependents jars from our local maven repository, that is radis.loria.fr. Still, as there's a lot of things to download (thanks to JBoss...), it may take several minutes, depending of your machine and your internet connection. You can check the downloads progress on the Eclipse console view.
+      	  </li>
+        </ol>
+      </p>
+      <p>
+        Once you imported the 4 maven project, you should have something like this in Eclipse:
+        <img src="Images/import-service-final.png" />
+      </p>
+    </div>	
+    
+    <div class="step">
+      <h3>Template content</h3>
+      <p>
+        The template contains 4 projects, each with its own specific role:
+        <dl>
+           <dt>funkyfactory-service-clock-ejb</dt>
+      	    <dd>The service itself. It contains all the sources and configuration files necessary for the service, and its build result is an EJB jar.</dd>
+          <dt>funkyfactory-service-clock</dt>
+            <dd>Package the EJB jar inside an EAR container. It contains only configuration files necessary for the creation of the EAR.</dd>
+       	  <dt>funkyfactory-service-clock-ftests</dt>
+       	    <dd>Functionnal tests for the service.</dd>
+       	  <dt>funkyfactory-service-clock-wstests</dt>
+       	    <dd>Tests the webservice SOAP access to the service.</dd>
+      	</dl>
+      </p>
+    </div>
+    
+    <div class="step">
+      <h3>funkyfactory-service-clock-ejb</h3>
+      <p>
+        This is the main project, for developing the service itself. It containts 4 area of interests:
+        <img src="Images/content-service-service.png" />
+        <dl>
+          <dt>src/main/java<dt>
+          <dd>Contains the main sources of the service. There is at least one package with 3 sources in it:
+            <ul>
+              <li>"MyServiceName"Service.java (here, ClockService.java), the interface to the service, extending "FactoryService"</li>
+              <li>"MyServiceName"ServiceBean.java (here, ClockServiceBean.java), the implementation of the service as an EJB3 bean</li>
+              <li>"MyServiceName"ServiceException.java (here, ClockServiceException.java), the specific exception that can be launched by the service.</li>
+            </ul>
+          </dd>
+          <dt>src/main/resources</dt>
+          <dd>Contains the configuration files for the service. Here, contains the "jboss-wsse-server.xml" file that defines the authentication policy for accessing the service through its webservice interface.</dd>
+          <dt>src/test/java</dt>
+          <dd>Contains the unit tests of the service, launched each time the project is packaged (mvn package) or directly with "mvn test".</dd>
+          <dt>src/test/resources</dt>
+          <dd>Contains the configuration files for the unit tests, that is, here the level of log shown during the test (log4j.properties).</dd>
+        </dl>
+      </p>
+      <p>
+        To compile the project, do a right-click on the project root folder ("funkyfactory-service-clock-ejb"), and in the contextual menu, select "Run As" -> "Maven package":
+        <img src="Images/mvn-service-ejb-package.png" />
+        This will compile the java classes, run the unit tests, and create the necessary jar file. If there's any problem in one phase, for example a compiler error or the failure of a test, then the jar is not build, and the error message appears in the Eclipse console view.
+      </p>
+      <p>
+        When the package build correctly, you can deploy the jar directly in your local maven repository (the ".m2" folder at the root of your home directory) by selecting, in the same contextual menu, "Run As" -> "Maven install":
+        <img src="Images/mvn-service-ejb-install.png" />
+        This step is necessary in order for the funkyfactory-service-clock project to build the EAR, as it use maven dependency to find this project's ejb jar.
+        If you want, you can check that maven has correctly published the ejb jar in the folder "~/.m2/repository/org/qualipso/funkyfactory-service-clock-ejb/0.0.1":
+        <img src="Images/m2-service-ejb.png" />
+        The version number ("0.0.1") is defined directly in the pom.xml file, and should be incremented with each new version.
+      </p>
+    </div>
+    
+    <div class="step">
+      <h3>funkyfactory-service-clock</h3>
+      <p>
+        The unique goal of this project is to package the EJB jar of the funkyfactory-service-clock-ejb in a deployable ear.
+        <img src="Images/content-service-service.png" />
+        The project contains nothing as everything is defined in its pom.xml file.
+      </p>
+		</div>
+		
+		<div class="step">
+      <h3>funkyfactory-service-clock-ftests</h3>
+      <p>
+        The goal of this project is to do the functionnal tests of the service, accessing the service through its RMI interfaces. In order to do such tests, it is thus necessary that the service is already deployed on the JBoss server. That's why the project is separated from the ejb project.
+        <img src="Images/content-service-ftests.png" />
+      </p>
+		</div>
+		
+		<div class="step">
+      <h3>funkyfactory-service-clock-wstests</h3>
+      <p>
+        The goal of this project is to test the webservice SOAP interface of the service. In order to do such tests, it is necessary that the service is already deployed on the JBoss server. That's why the project is separated from the ejb project.
+        <img src="Images/content-service-wstests.png" />
+      </p>
+		</div>
+		
+		<div id="conclusion">
+			<p></p>
+		</div>
+    
+	</div>
+</body>
+</html>

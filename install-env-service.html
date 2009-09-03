@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
-	<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+	<meta http-equiv="Content-type" content="text/html; charset=utf-8"/>
 	<meta http-equiv="Content-Style-Type" content="text/css" />
 	<meta http-equiv="Content-Script-Type" content="text/javascript" />
 	
@@ -45,7 +45,7 @@
 		  </ul>
 		</div>
 			
-    <!--	Java -->
+        <!-- Java -->
 		<div class="step">
 		  <h3>Step 1: installing Java</h3>
 			<h4>Version needed: JDK 1.6</h4>
@@ -61,13 +61,13 @@
   		  <samp>
   		    <kbd>Funkadelic:~$ update-java-alternatives -l</kbd>
   		    <samp>java-1.5.0-sun 53 /usr/lib/jvm/java-1.5.0-sun</samp>
-          <samp>java-6-sun 63 /usr/lib/jvm/java-6-sun<samp>
-        <samp>
+          <samp>java-6-sun 63 /usr/lib/jvm/java-6-sun</samp>
+        </samp>
 	  	Each line in the given answer is a Java version installed on your system. If you have a "java-6-sun" line, then it means that the correct version of java is installed, but that the system is not using it. You can correct that using the following shell command:
 	  	  <samp>
 	  	    <kbd>sudo update-java-alternatives -s java-6-sun</kbd>
 	  	  </samp>
-	  	<p>
+	  	</p>
 	  	<p>If you don't have a "java-6-sun" line in the answer of <kbd>update-java-alternatives -l</kbd>, or if you get an "unknown command" error message (or something similar) as the anwser of <kbd>javac -version</kbd>, then it means you need to install the Java JDK.</p>
 	  	<p>To install Java JDK 1.6 with Synaptic (on Ubuntu):
   	  	<ol>
@@ -75,7 +75,7 @@
 	    	    Launch "Software Sources" (in "System" -> "Administration") 
 	    	    <img src="Images/launch-sources.png" />
 	    	  </li>
-          <li>
+              <li>
 	    	    In the "Ubuntu Software" tab, check that the <strong>multiverse</strong> source repository for package is selected.
 	    	    <img src="Images/multiverse-repository.png" />
 	    	  </li>
@@ -85,7 +85,7 @@
 	    	  </li>
 	    	  <li>
 	    	    Search for the "sun-java6-jdk" package and install it.
-	    	    <img src="Images/install-java.png">
+	    	    <img src="Images/install-java.png" />
 	    	  </li>
 	    	  <li>
 	    	    In the shell, type the following command, to ensure that the system is using the version of Java that you just installed.
@@ -104,12 +104,11 @@
 	    	    Set up the <code>JAVA_HOME</code> environment variable by adding the following line to your .bashrc file:
 	  	      <code>export JAVA_HOME=/usr/lib/jvm/java-6-sun</code>
 	    	  </li>
-	    	</ol>
+	    </ol>
 	  	</p>
-
-		</div>
+	    </div>
 		
-    <!--	SVN	-->
+        <!-- SVN -->
 		<div class="step">
 		  <h3>Step 2: installing Subversion</h3>
 			<h4>Version needed: 1.6</h4>
@@ -137,7 +136,7 @@
 			    </li>
 			    <li>
 			      In the "Third-Party Software" tab, click on the "Add..." button (bottom left)
-			      <img src="Images/add-repository.png">
+			      <img src="Images/add-repository.png" />
 			    </li>
 			    <li>
 			      Fill the "APT line:" field with the following line:
@@ -152,7 +151,7 @@
 			    </li>
 			    <li>
 	    	    Search for the "subversion" package and install it.
-	    	    <img src="Images/install-svn.png">
+	    	    <img src="Images/install-svn.png" />
 	    	  </li>
 	    	  <li>
 	    	    Test that your svn version is correctly installed, by typing the following command in the shell:
@@ -166,7 +165,7 @@
 			<p>Of course, you can use svn directly from the shell, but you will also install later a plugin for eclipse that will allow you to use svn directly from Eclipse.</p>
 		</div>
 		
-		 <!--	GIT	-->
+		 <!-- GIT -->
 		<div class="step">
 		  <h3>Step 3: installing Git</h3>
 			<h4>Version needed: 1.6</h4>
@@ -186,7 +185,7 @@
     	    </li>
     	    <li>
     	      Search for the "git-core" package and install it.
-	    	    <img src="Images/install-git.png">
+	    	    <img src="Images/install-git.png" />
     	    </li>
     	    <li>
 	    	    Test that your git version is correctly installed, by typing the following command in the shell:
@@ -240,7 +239,7 @@
     	    </li>
     	    <li>
     	      Search for the "maven2" package and install it.
-	    	    <img src="Images/install-maven.png">
+	    	    <img src="Images/install-maven.png" />
     	    </li>
     	    <li>
 	    	    Test that your maven version is correctly installed, by typing the following command in the shell:
@@ -274,7 +273,7 @@
 			    </li>
 			    <li>
 			      Set up the <code>JBOSS_HOME</code> environment variable by adding the following line to your .bashrc file:
-	  	      <code>export JBOSS_HOME=/&lt;<emph>path_to_the_chosen_folder</emph>&gt;/jboss-5.0.1.GA</code>
+	  	      <code>export JBOSS_HOME=/&lt;<em>path_to_the_chosen_folder</em>&gt;/jboss-5.0.1.GA</code>
 			    </li>
 			  </ol>
 			</p>
@@ -326,23 +325,23 @@
 		    <ol>
 		      <li>
 		        Go to "Windows" -> "Preferences":
-		        <img src="Images/modif-eclipse-prefs.png">
+		        <img src="Images/modif-eclipse-prefs.png" />
 		      </li>
 		      <li>
 		        In the left tree, choose "Java" -> "Code Style" -> "Formatter", and in the corresponding right panel, click on the "New..." button:
-		        <img src="Images/modif-eclipse-formatter.png">
+		        <img src="Images/modif-eclipse-formatter.png" />
 		      </li>
 		      <li>
 		        Fill the "Profile name" with the name of your profile, for example "Qualipso Factory", and then click on the "OK" button:
-		        <img src="Images/modif-eclipse-formatter-name.png">
+		        <img src="Images/modif-eclipse-formatter-name.png" />
 		      </li>
 		      <li>
 		        In the "Indentation" tab, select "Spaces only" for the tab policy, and set "4" for intendation and tab sizes:
-		        <img src="Images/modif-eclipse-formatter-spaces.png">
+		        <img src="Images/modif-eclipse-formatter-spaces.png" />
 		      </li>
 		      <li>
 		        In the "Line Wrapping" tab, set "160" for the maximum line width, and click on the "OK" buttons:
-		        <img src="Images/modif-eclipse-formatter-line.png">
+		        <img src="Images/modif-eclipse-formatter-line.png" />
 		      </li>
 		    </ol>
 		  </p>

@@ -24,7 +24,7 @@
 		<h2>Installation of Eclipse template for service development</h2>
 		
 		<div id="introduction">
-			<p>This page contains the necessary instructions to install an Eclipse template for developing a factory abstractService. It also contains an overview of everything given in this template. It assume that you have already installed a correct development environment, as described in the <a href="install-env-service.html">appropriate documentation</a>. If this is not the case, then you need first to follow the given instruction before proceeding to this page.</p>
+			<p>This page contains the necessary instructions to install an Eclipse template for developing a factory abstractService. It also contains an overview of everything given in this template. It assume that you have already installed a correct development environment, as described in the <a href="install-env-service.html">appropriate documentation</a>, and that you have correctly configured JBoss, as described in the <a href="config-jboss.html">appropriate documentation</a>. If this is not the case, then you need first to follow the given instruction before proceeding to this page.</p>
 		</div>
 		
 		<div class="step">
@@ -76,6 +76,7 @@
        	        <li>funkyfactory-service-clock-wstests</li>
       	     </ul>
       	    Resolving maven dependencies can take a long time to Eclipse, especially for the "funkyfactory-service-clock-ejb" project. Fortunately, the pom.xml file is configured to download all dependents jars from our local maven repository, that is radis.loria.fr. Still, as there's a lot of things to download (thanks to JBoss...), it may take several minutes, depending of your machine and your internet connection. You can check the downloads progress on the Eclipse console view.
+            <img src="Images/import-service-console.png" />
       	  </li>
         </ol>
       </p>
@@ -127,7 +128,8 @@
       <p>
         To compile the project, do a right-click on the project root folder ("funkyfactory-service-clock-ejb"), and in the contextual menu, select "Run As" -> "Maven package":
         <img src="Images/mvn-service-ejb-package.png" />
-        This will compile the java classes, run the unit tests, and create the necessary jar file. If there's any problem in one phase, for example a compiler error or the failure of a test, then the jar is not build, and the error message appears in the Eclipse console view.
+        This will compile the java classes, run the unit tests, and create the necessary jar file. If there's any problem in one phase, for example a compiler error or the failure of a test, then the jar is not build. You can check the compilation in the console view:
+        <img src="Images/mvn-service-ejb-console.png" />
       </p>
       <p>
         When the package build correctly, you can deploy the jar directly in your local maven repository (the ".m2" folder at the root of your home directory) by selecting, in the same contextual menu, "Run As" -> "Maven install":
@@ -143,29 +145,110 @@
       <h3>funkyfactory-service-clock</h3>
       <p>
         The unique goal of this project is to package the EJB jar of the funkyfactory-service-clock-ejb in a deployable ear.
-        <img src="Images/content-service-service.png" />
+        <img src="Images/content-service-ear.png" />
         The project contains nothing as everything is defined in its pom.xml file.
+      </p>
+      <p>Right now, the ear contains the WHOLE Qualipso Factory, not just the service itself. This means that JBoss will complains if you try to deploy this ear if you already have the Qualipso Factory deployed on the JBoss server.</p>
+      <p>
+        The creation of the ear is done with a "maven package" command. However, due to a bug in the Eclipse maven plugin. you need to define a new Eclipse run configuration:
+        <ol>
+          <li>
+            Do a right-click on the project root folder ("funkyfactory-service-clock"), and in the contextual menu, select "Run As" -> "Run Configurations...":
+            <img src="Images/create-run-config.png" />
+          </li>
+          <li>
+            Select "Maven Build" in the left list, and then click on the "New launch configuration" button:
+            <img src="Images/create-run-config-new.png" />
+          </li>
+          <li>
+            Set up the new configuration: fills up the "Name" field with "funkyfactory-service-clock EAR" and click on the "Browse Workspace..." button to select the "funkyfactory-service-clock" workspace. Then, click on the "Apply" button to save the configuration. You can now press the "Run" button to launch the newly created and saved configuration.
+            <img src="Images/create-run-config-params.png" />
+             You can check the creation of the ear in the console view:
+            <img src="Images/build-service-ear.png" />
+          </li>
+        </ol>
+        Once the configuration is saved, you don't have to recreate it each time. To relaunch the created run configuration, do a right-click on the project root folder ("funkyfactory-service-clock"), in the contextual menu, select "Run As" -> "Run Configurations...", select your configuration in the left-side list, and click on the run button (bottom right).
+      </p>
+      <p>
+        <ol>
+          <li>
+            In order to deploy the service, you need to have a running JBoss. From Eclipse, launch the JBoss server: in the "Servers" view, select the "JBoss 5.01 Local", and click on the arrow button:
+            <img src="Images/launch-jboss.png" />
+            You can follow the server launch in the console view:
+            <img src="Images/launch-jboss-console.png" />
+            If you don't see the server log in the console view, select the content of the console view with the "consoles" button:
+            <img src="Images/change-console.png" />
+          </li>
+          <li>
+            The newly created ear will apply in a "target" folder, at the root of the project. If you don't see such a folder, right-click on the project root folder ("funkyfactory-service-clock"), and in the contextual menu, select "Refresh" (or press the "F5" key):
+            <img src="Images/refresh.png" />
+            Then, in the "target" folder, select the created ear ("funkyfactory-service-clock-0.0.1.ear"), right-click on it, and in the contextual menu, select "Make Deployable":
+            <img src="Images/deployable-ear-service.png" />
+            The ear will appears in the "Servers" view, under the "JBoss 5.01 Local":
+            <img src="Images/ear-deployed.png" />
+            And you can follow the deployement and check if there is any problem in the console:
+            <img src="Images/ear-deployed-console.png" />
+          </li>
+          <li>
+            If you change something in the EJB code and want to redeploy the ear, don't forget to undeploy the ear before: in the "Servers" view, right-click on the "funkyfactory-service-clock-ear", and in the contextual menu, select "Remove":
+            <img src="Images/ear-undeploy.png" />
+            You can follow the undeployement in the console:
+            <img src="Images/ear-undeploy-console.png" />
+          </li>
+        </ol>
       </p>
 		</div>
 		
 		<div class="step">
       <h3>funkyfactory-service-clock-ftests</h3>
       <p>
-        The goal of this project is to do the functionnal tests of the service, accessing the service through its RMI interfaces. In order to do such tests, it is thus necessary that the service is already deployed on the JBoss server. That's why the project is separated from the ejb project.
+        The goal of this project is to do the functionnal tests of the service, accessing the service through its RMI interfaces. In order to do such tests, it is thus necessary that the service is already deployed on the JBoss server. That's why the project is separated from the ejb project. It containts 2 area of interests:
         <img src="Images/content-service-ftests.png" />
+        <dl>
+          <dt>src/test/java<dt>
+          <dd>Contains the sources of the functional tests.
+          </dd>
+          <dt>src/test/resources</dt>
+          <dd>Contains the configuration files for the tests:
+            <ul>
+              <li>"log4j.properties" defines the level of log shown during the test</li>
+              <li>"jaas.config" defines the method used to authenticate on the client. Here, it use "ClientLoginModule", as defined before in JBoss's "login-config.xml" file, in the module for the EJB client access.</li>
+            </ul>
+          </dd>
+        </dl>
+      </p>
+      <p>
+        To launch the tests, you need to have a JBoss server running with the service EAR deployed (see precedent step). Then, do a right-click on the project root folder ("funkyfactory-service-clock-ftests"), and in the contextual menu, select "Run As" -> "Maven test":
+        <img src="Images/run-ftests.png" />
+        You can check the tests results in the console view:
+        <img src="Images/run-ftests-console.png" />
       </p>
 		</div>
 		
 		<div class="step">
       <h3>funkyfactory-service-clock-wstests</h3>
       <p>
-        The goal of this project is to test the webservice SOAP interface of the service. In order to do such tests, it is necessary that the service is already deployed on the JBoss server. That's why the project is separated from the ejb project.
+        The goal of this project is to test the webservice SOAP interface of the service. In order to do such tests, it is necessary that the service is already deployed on the JBoss server. That's why the project is separated from the ejb project.  It containts 2 area of interests:
         <img src="Images/content-service-wstests.png" />
+        <dl>
+          <dt>src/test/java<dt>
+          <dd>Contains the sources of the tests.
+          </dd>
+          <dt>src/test/resources</dt>
+          <dd>Contains the configuration files for the tests:here, "log4j.properties" defines the level of log shown during the test.</dd>
+        </dl>
+        The red square with the white cross, in the bottom left corner of the sources folders, means that Eclipse had a problem compiling the project. It's perfectly normal. To test the webservice interface, the maven compile task will download the webservice wsdl file (defined in the pom.xml file), and generate from it a generic soap client in java. The java file generated will be put in the "src/main/java" folder. As the folder doesn't exist, and isn't defined in the Java project, Eclipse can't compile the project, and thus complains. But the test will work perfectly once launched throught maven, as maven will take care of generating and compiling the missing classes.
+      </p>
+      <p>
+        To launch the tests, you need to have a JBoss server running with the service EAR deployed (see precedent step). Then, do a right-click on the project root folder ("funkyfactory-service-clock-wstests"), and in the contextual menu, select "Run As" -> "Maven test":
+        <img src="Images/wstests-launch.png" />
+        You can check the tests results in the console view:
+        <img src="Images/wstests-launch-console.png" />
       </p>
 		</div>
 		
 		<div id="conclusion">
-			<p></p>
+			<p>Once you're at this step, you have almost everything to write your own service: a working development environment, a working JBoss server configured for the factory, and a full-configured service example, complete with functionals and webservice access tests, that compile, deploy, and pass tests. You also have the full procedure to compile, deploy, and test the service. You know need to understand the concepts and API of the factory, to be able to write your own service, using the example as a template.</p>
 		</div>
     
 	</div>

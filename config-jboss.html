@@ -1,0 +1,91 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+	<meta http-equiv="Content-Style-Type" content="text/css" />
+	<meta http-equiv="Content-Script-Type" content="text/javascript" />
+	
+	<meta http-equiv="imagetoolbar" content="no" />
+	
+	<meta name="author" content="Christophe Bouthier" />
+	<meta name="copyright" content="copyright 2009 - INRIA" />
+	<meta name="keywords" content="Qualipso, qualipso factory, open-source, quality, service, development" />
+	<meta name="description" content="Documentation for the Qualiso factory - installation of the development environment" />
+	
+	<link rel="stylesheet" href="/commons/css/style.css" type="text/css" />
+	
+	<title>Qualipso Factory - JBoss configuration for the Factory</title>
+</head>
+<body id="www.qualipso.org">
+	
+	<h1 id="title">Qualipso Factory</h1>
+	
+	<div id="content">
+		<h2>JBoss configuration for the Factory</h2>
+		
+		<div id="introduction">
+			<p>In order to develop a service for the factory, you need to be able to deploy a factory, and for this, you need first to configure some properties of JBoss for the factory. This page contains the instruction necessary to configure JBoss for such a deployement. It assume that you have already installed a correct development environment, as described in the <a href="install-env-service.html">appropriate documentation</a>. If this is not the case, then you need first to follow the given instruction before proceeding to this page.</p>
+		</div>
+		
+		<div class="step">
+      <h3>JBoss Configuration</h3>
+      <p>
+        For the factory to run correctly, it need some information from JBoss, especially authentication information. Indeed, you need to modify the JAAS configuration file of JBoss, in order to add the specific authentication configuration for the services of the factory. Each service in the factory reference the name of a specific application policy (with a @SecurityDomain annotation). The application policy define how to find the users names and passwords, and how the client can authenticate itself to the service (digest, plain, etc). Thus, by referencing the same name, services can use the same application policy, that is the same users and passwords, and the same authentication methods.
+        In the factory, all core services reference the same application policy, called "JBossWSDigest". You need to define this security domain. This is done by modifying the "login-config.xml" file in the <samp>$JBOSS_HOME/server/default/conf</samp> folder:
+        <ol>
+	    	  <li>
+	    	    Open the "login-config.xml" file in the <samp>$JBOSS_HOME/server/default/conf</samp> folder in your prefered text editor:
+	    	    <img src="Images/config-jboss-login.png" />
+	    	  </li>
+	    	  <li>
+	    	    Find the <samp>&lt;application-policy name="other"&gt;</samp> tag, near the end of the file, and before it, add the following code:
+	    	    <pre>
+	    	      <samp>
+                  &lt;application-policy name="JBossWSDigest"&gt;
+                    &lt;authentication&gt;
+                      &lt;login-module code="org.jboss.security.auth.spi.UsersRolesLoginModule" flag="optional"&gt;
+                        &lt;module-option name="usersProperties"&gt;props/jbossws-users.properties&lt;/module-option&gt;
+                        &lt;module-option name="rolesProperties"&gt;props/jbossws-roles.properties&lt;/module-option&gt;
+                        &lt;module-option name="hashAlgorithm"&gt;SHA&lt;/module-option&gt;
+                        &lt;module-option name="hashEncoding"&gt;BASE64&lt;/module-option&gt;
+                        &lt;module-option name="hashUserPassword"&gt;false&lt;/module-option&gt;
+                        &lt;module-option name="hashStorePassword"&gt;true&lt;/module-option&gt;
+                        &lt;module-option name="storeDigestCallback"&gt;org.jboss.ws.extensions.security.auth.callback.UsernameTokenCallback&lt;/module-option&gt;
+                        &lt;module-option name="unauthenticatedIdentity"&gt;guest&lt;/module-option&gt;
+                      &lt;/login-module&gt;
+                      &lt;login-module code="org.jboss.security.ClientLoginModule" flag="required"&gt;
+                        &lt;module-option name="usersProperties"&gt;props/jbossws-users.properties&lt;/module-option&gt;
+                        &lt;module-option name="rolesProperties"&gt;props/jbossws-roles.properties&lt;/module-option&gt;
+                      &lt;/login-module&gt;
+                  &lt;/authentication&gt;
+                &lt;/application-policy&gt;
+	    	      </samp>
+	    	    </pre>
+	    	    Your file "login-config.xml" should look like this:
+	    	    <img src="Images/config-jboss-jaas.png" />
+	    	    <p>Some explanation of the configuration:
+	    	      <ul>
+	    	        <li>
+	    	          The "application-policy" tag define the name of the application policy ("JBossWSDigest" here), and contains the configuration for this application policy.
+	    	          <img src="Images/config-jboss-jaas-apppolicy.png" />
+	    	        </li>
+	    	        <li>The 2 "login-module" tags define two methods of login: one called "UsersRolesLoginModule", which is used by clients using the webservice interface, and one called "ClientLoginModule", which is used by clients using the RMI interface.</li>
+	    	        	 <img src="Images/config-jboss-jaas-modules.png" />
+	    	        <li>The 2 login modules define the path to the files used to get usernames and roles through their "usersProperties" and "rolesProperties" properties</li>
+	    	        	 <img src="Images/config-jboss-jaas-users.png" />
+	    	        <li>Moreover, the "UsersRolesLoginModule" module set its properties so that the client has to use a digest to authenticate (instead of passing the passord in clear).</li>
+	    	        	 <img src="Images/config-jboss-jaas-digest.png" />
+              </u>
+	    	    </p>
+	    	  </li>
+	    	</ol>
+      </p>
+		</div>
+		
+		<div id="conclusion">
+			<p>Once the application policies are defined, your JBoss is ready for the factory. You can now start to <a href="install-dev-service.html">install the Eclipse template</a> to create a factory service.</p>
+		</div>
+
+	</div>
+</body>
+</html>
